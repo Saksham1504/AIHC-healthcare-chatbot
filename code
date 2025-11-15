@@ -1,0 +1,602 @@
+HTML
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIHC - AI Healthcare Chatbot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo">
+            <h1>AIHC</h1>
+            <p>AI Healthcare Chatbot</p>
+        </div>
+
+        <!-- Login Form -->
+        <div class="form-container active" id="loginForm">
+            <div class="form-group">
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter your password" required>
+            </div>
+            <div class="error-message" id="loginError"></div>
+            <button class="btn" onclick="login()">Login</button>
+            <div class="toggle-text">
+                Don't have an account? <a onclick="showRegister()">Register here</a>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <div class="form-container" id="registerForm">
+            <div class="form-group">
+                <label for="registerName">Full Name</label>
+                <input type="text" id="registerName" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+                <label for="registerEmail">Email</label>
+                <input type="email" id="registerEmail" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="registerPassword">Password</label>
+                <input type="password" id="registerPassword" placeholder="Create a password" required>
+            </div>
+            <div class="form-group">
+                <label for="registerConfirmPassword">Confirm Password</label>
+                <input type="password" id="registerConfirmPassword" placeholder="Confirm your password" required>
+            </div>
+            <div class="error-message" id="registerError"></div>
+            <button class="btn" onclick="register()">Register</button>
+            <div class="toggle-text">
+                Already have an account? <a onclick="showLogin()">Login here</a>
+            </div>
+        </div>
+
+        <!-- Chat Interface -->
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-header">
+                <h2>AIHC Assistant</h2>
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar"></div>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+            <div class="chat-box" id="chatBox">
+                <div class="message bot-message">
+                    Hello! I'm AIHC, your AI Healthcare assistant. How can I help you today?
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Ask about your health..." onkeypress="handleKeyPress(event)">
+                <button class="send-btn" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+CSS
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 600px;
+    padding: 40px;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo h1 {
+    color: #667eea;
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.logo p {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.form-container {
+    display: none;
+}
+
+.form-container.active {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.toggle-text {
+    text-align: center;
+    margin-top: 20px;
+    color: #6c757d;
+}
+
+.toggle-text a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.toggle-text a:hover {
+    text-decoration: underline;
+}
+
+/* Chat Interface Styles */
+.chat-container {
+    display: none;
+}
+
+.chat-container.active {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.chat-header h2 {
+    color: #667eea;
+    font-size: 24px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+}
+
+.logout-btn {
+    padding: 8px 20px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+}
+
+.chat-box {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    height: 400px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border: 2px solid #e9ecef;
+}
+
+.chat-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-box::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+    background: #667eea;
+    border-radius: 10px;
+}
+
+.message {
+    padding: 12px 18px;
+    border-radius: 18px;
+    max-width: 80%;
+    word-wrap: break-word;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.user-message {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.bot-message {
+    background: white;
+    color: #333;
+    align-self: flex-start;
+    border: 2px solid #e9ecef;
+}
+
+.chat-input-area {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 15px 20px;
+    border: 2px solid #e9ecef;
+    border-radius: 25px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.chat-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.send-btn {
+    padding: 15px 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.send-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.error-message {
+    color: #f5576c;
+    font-size: 14px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+}
+
+@media (max-width: 640px) {
+    .container {
+        padding: 25px;
+    }
+
+    .logo h1 {
+        font-size: 28px;
+    }
+
+    .chat-box {
+        height: 300px;
+    }
+}
+
+JAVASCRIPT
+
+// Store users in memory (in a real app, this would be a backend database)
+let users = {};
+let currentUser = null;
+
+// Healthcare responses database
+const healthcareResponses = {
+    'headache': 'For headaches, ensure you stay hydrated, get adequate rest, and manage stress. If headaches persist or worsen, please consult a healthcare provider.',
+    'fever': 'If you have a fever, rest, stay hydrated, and monitor your temperature. Seek medical attention if fever exceeds 103°F (39.4°C) or lasts more than 3 days.',
+    'cold': 'For cold symptoms, get plenty of rest, drink fluids, and use over-the-counter medications as needed. If symptoms worsen or persist beyond 10 days, consult a doctor.',
+    'cough': 'For a cough, stay hydrated, use honey or cough drops, and avoid irritants. If cough persists for more than 3 weeks or includes blood, seek medical attention.',
+    'pain': 'For general pain, rest the affected area, apply ice or heat as appropriate, and consider over-the-counter pain relievers. Persistent pain should be evaluated by a healthcare provider.',
+    'stress': 'To manage stress, practice deep breathing, exercise regularly, maintain a healthy sleep schedule, and consider meditation or talking to a counselor.',
+    'sleep': 'For better sleep, maintain a consistent schedule, create a relaxing bedtime routine, limit screen time before bed, and keep your bedroom cool and dark.',
+    'diet': 'A balanced diet includes fruits, vegetables, whole grains, lean proteins, and healthy fats. Stay hydrated and limit processed foods, sugar, and excessive salt.',
+    'exercise': 'Aim for at least 150 minutes of moderate aerobic activity or 75 minutes of vigorous activity per week, plus muscle-strengthening activities twice a week.',
+    'appointment': 'I recommend scheduling an appointment with your healthcare provider for personalized medical advice and treatment.',
+    'emergency': '⚠️ If you\'re experiencing a medical emergency, please call emergency services (911 in the US) immediately or go to the nearest emergency room.',
+    'medicine': 'For medication advice, please consult with your doctor or pharmacist. They can provide personalized recommendations based on your medical history.',
+    'diabetes': 'Managing diabetes involves monitoring blood sugar, following a healthy diet, exercising regularly, and taking medications as prescribed. Regular check-ups with your doctor are essential.',
+    'blood pressure': 'To manage blood pressure, reduce sodium intake, exercise regularly, maintain a healthy weight, limit alcohol, and manage stress. Monitor your BP regularly.',
+    'anxiety': 'For anxiety, try deep breathing exercises, regular physical activity, adequate sleep, and limiting caffeine. Consider speaking with a mental health professional for support.',
+    'depression': 'If you\'re experiencing depression, please reach out to a mental health professional. Regular exercise, social connections, and proper sleep can also help. You\'re not alone.',
+    'allergy': 'For allergies, identify and avoid triggers, use antihistamines as needed, and keep your living space clean. Severe allergies may require consultation with an allergist.',
+    'asthma': 'Manage asthma by avoiding triggers, using prescribed inhalers correctly, and having an action plan. Regular follow-ups with your doctor are important.',
+    'weight': 'Healthy weight management involves balanced nutrition, regular physical activity, adequate sleep, and stress management. Consult a healthcare provider for personalized guidance.',
+    'vitamin': 'A balanced diet usually provides necessary vitamins. If considering supplements, consult your healthcare provider to determine what\'s appropriate for your needs.',
+    'default': 'I\'m here to provide general health information. For specific medical concerns, please consult with a qualified healthcare provider. How else can I assist you with health-related questions?'
+};
+
+// Show register form
+function showRegister() {
+    document.getElementById('loginForm').classList.remove('active');
+    document.getElementById('registerForm').classList.add('active');
+    document.getElementById('loginError').classList.remove('show');
+    document.getElementById('registerError').classList.remove('show');
+}
+
+// Show login form
+function showLogin() {
+    document.getElementById('registerForm').classList.remove('active');
+    document.getElementById('loginForm').classList.add('active');
+    document.getElementById('loginError').classList.remove('show');
+    document.getElementById('registerError').classList.remove('show');
+}
+
+// Register function
+function register() {
+    const name = document.getElementById('registerName').value.trim();
+    const email = document.getElementById('registerEmail').value.trim();
+    const password = document.getElementById('registerPassword').value;
+    const confirmPassword = document.getElementById('registerConfirmPassword').value;
+    const errorElement = document.getElementById('registerError');
+
+    if (!name || !email || !password || !confirmPassword) {
+        errorElement.textContent = 'Please fill in all fields';
+        errorElement.classList.add('show');
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        errorElement.textContent = 'Passwords do not match';
+        errorElement.classList.add('show');
+        return;
+    }
+
+    if (password.length < 6) {
+        errorElement.textContent = 'Password must be at least 6 characters';
+        errorElement.classList.add('show');
+        return;
+    }
+
+    if (users[email]) {
+        errorElement.textContent = 'Email already registered';
+        errorElement.classList.add('show');
+        return;
+    }
+
+    users[email] = { name, email, password };
+    errorElement.classList.remove('show');
+    alert('Registration successful! Please login.');
+    
+    // Clear form fields
+    document.getElementById('registerName').value = '';
+    document.getElementById('registerEmail').value = '';
+    document.getElementById('registerPassword').value = '';
+    document.getElementById('registerConfirmPassword').value = '';
+    
+    showLogin();
+}
+
+// Login function
+function login() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const errorElement = document.getElementById('loginError');
+
+    if (!email || !password) {
+        errorElement.textContent = 'Please fill in all fields';
+        errorElement.classList.add('show');
+        return;
+    }
+
+    if (!users[email] || users[email].password !== password) {
+        errorElement.textContent = 'Invalid email or password';
+        errorElement.classList.add('show');
+        return;
+    }
+
+    currentUser = users[email];
+    errorElement.classList.remove('show');
+    
+    // Clear login fields
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPassword').value = '';
+    
+    showChatInterface();
+}
+
+// Show chat interface
+function showChatInterface() {
+    document.getElementById('loginForm').classList.remove('active');
+    document.getElementById('chatContainer').classList.add('active');
+    const avatar = document.getElementById('userAvatar');
+    avatar.textContent = currentUser.name.charAt(0).toUpperCase();
+}
+
+// Logout function
+function logout() {
+    currentUser = null;
+    document.getElementById('chatContainer').classList.remove('active');
+    document.getElementById('loginForm').classList.add('active');
+    document.getElementById('chatBox').innerHTML = '<div class="message bot-message">Hello! I\'m AIHC, your AI Healthcare assistant. How can I help you today?</div>';
+    document.getElementById('chatInput').value = '';
+}
+
+// Send message function
+function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+
+    if (!message) return;
+
+    // Add user message
+    addMessage(message, 'user-message');
+    input.value = '';
+
+    // Simulate bot thinking
+    setTimeout(() => {
+        const response = generateResponse(message);
+        addMessage(response, 'bot-message');
+    }, 500);
+}
+
+// Add message to chat
+function addMessage(text, className) {
+    const chatBox = document.getElementById('chatBox');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${className}`;
+    messageDiv.textContent = text;
+    chatBox.appendChild(messageDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// Generate bot response
+function generateResponse(message) {
+    const lowerMessage = message.toLowerCase();
+
+    // Check for greetings
+    if (lowerMessage.match(/\b(hi|hello|hey|good morning|good afternoon|good evening)\b/)) {
+        return `Hello ${currentUser.name}! How can I assist you with your health today?`;
+    }
+
+    // Check for thanks
+    if (lowerMessage.match(/\b(thank|thanks|appreciate)\b/)) {
+        return 'You\'re welcome! Is there anything else I can help you with?';
+    }
+
+    // Check for goodbye
+    if (lowerMessage.match(/\b(bye|goodbye|see you)\b/)) {
+        return 'Take care! Remember to prioritize your health. Feel free to come back anytime!';
+    }
+
+    // Check for help
+    if (lowerMessage.match(/\b(help|what can you do)\b/)) {
+        return 'I can provide information about common health topics including: headaches, fever, cold, cough, pain, stress, sleep, diet, exercise, allergies, diabetes, blood pressure, anxiety, and more. Just ask me about any health concern!';
+    }
+
+    // Check healthcare keywords
+    for (let keyword in healthcareResponses) {
+        if (lowerMessage.includes(keyword)) {
+            return healthcareResponses[keyword];
+        }
+    }
+
+    return healthcareResponses['default'];
+}
+
+// Handle Enter key press
+function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+}
+
+
+
+
+
+
+
+
+
+
