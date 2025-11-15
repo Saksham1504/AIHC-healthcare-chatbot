@@ -187,3 +187,22 @@ For questions, issues, or suggestions, please open an issue in the GitHub reposi
 ---
 
 **Note**: This is a frontend-only application. To use in production, connect it to a secure backend API for user authentication and data persistence.
+
+
+SCREENSHOT
+
+registeration page - 
+
+<img width="1309" height="856" alt="Screenshot (150)" src="https://github.com/user-attachments/assets/3c5936dc-9d4b-405b-b15f-474a88d270de" />
+
+
+login page - 
+
+<img width="1326" height="845" alt="Screenshot (152)" src="https://github.com/user-attachments/assets/68cc6087-9600-4dcf-9a92-310d41d95fb4" />
+
+home page - 
+
+<img width="1308" height="855" alt="Screenshot (153)" src="https://github.com/user-attachments/assets/7562a5a6-617b-4d53-829f-6d5853f863c7" />
+
+<img width="1308" height="855" alt="Screenshot (153)" src="https://github.com/user-attachments/assets/b8a741b9-68ed-435b-aeea-61d7de7fb004" />                                                                                                                                                                                        
+
